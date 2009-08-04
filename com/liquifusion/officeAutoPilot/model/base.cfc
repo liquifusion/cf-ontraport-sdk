@@ -15,6 +15,8 @@
 		</cfscript>
 	</cffunction>
 	
+	<cfinclude template="mixins/locking.cfm" />
+	
 	<cffunction name="getAppId">
 		<cfreturn variables.appId />
 	</cffunction>

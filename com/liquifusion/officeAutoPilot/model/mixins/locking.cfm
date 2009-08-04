@@ -1,24 +1,28 @@
-<cffunction name="scopeLockRead" output="false" returnType="any">
-   <cfargument name="scope" type="string" required="true">
-   <cfargument name="key" type="string" required="true">
-   <cfargument name="timeout" type="numeric" required="false" default="30">
-   <cfset var ptr = "">
+<cffunction name="namedLockRead" output="false" returnType="any">
+	<cfargument name="name" type="string" required="true" />
+	<cfargument name="objectName" type="string" required="true" />
+	<cfargument name="key" type="string" required="true" />
+	<cfargument name="timeout" type="numeric" required="false" default="30" />
+	
+	<cfset var loc = StructNew() />
    
-   <cflock scope="#arguments.scope#" type="readOnly" timeout="#arguments.timeout#">
-      <cfset ptr = structGet(arguments.scope)>
-      <cfreturn duplicate(ptr[arguments.key])>
-   </cflock>
+	<cflock name="#arguments.name#" type="readOnly" timeout="#arguments.timeout#">
+		<cfset loc.object = Evaluate(arguments.objectName) />
+		<cfreturn Duplicate(loc.object[arguments.key]) />
+	</cflock>
 </cffunction>
 
-<cffunction name="scopeLockWrite" output="false" returnType="void">
-   <cfargument name="scope" type="string" required="true">
-   <cfargument name="key" type="string" required="true">
-   <cfargument name="value" type="any" required="true">
-   <cfargument name="timeout" type="numeric" required="false" default="30">
-   <cfset var ptr = "">
-   
-   <cflock scope="#arguments.scope#" type="exclusive" timeout="#arguments.timeout#">
-      <cfset ptr = structGet(arguments.scope)>
-      <cfset ptr[arguments.key] = arguments.value>
-   </cflock>
+<cffunction name="namedLockWrite" output="false" returnType="void">
+	<cfargument name="name" type="string" required="true" />
+	<cfargument name="objectName" type="string" required="true" />
+	<cfargument name="key" type="string" required="true" />
+	<cfargument name="value" type="any" required="true" />
+	<cfargument name="timeout" type="numeric" required="false" default="30" />
+	
+	<cfset var loc = StructNew() />
+	
+	<cflock name="#arguments.name#" type="exclusive" timeout="#arguments.timeout#">
+		<cfset loc.object = Evaluate(arguments.objectName) />
+		<cfset loc.object[arguments.key] = arguments.value />
+	</cflock>
 </cffunction>
