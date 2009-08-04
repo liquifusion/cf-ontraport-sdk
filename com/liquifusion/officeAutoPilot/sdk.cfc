@@ -1,10 +1,13 @@
 <cfcomponent>
 
 
-
-
 	<cffunction name="init">
+		<cfargument name="appId" required="true" type="string" />
+		<cfargument name="key" required="true" type="string" />
 		<cfscript>
+			variables.appId = arguments.appId;
+			variables.key = arguments.key;
+		
 			// need to pull in Appid, Key
 			return this;
 		</cfscript>
@@ -68,5 +71,9 @@
 		
 		</cfscript>
 	</cffunction>
+	
+	
+	<!---
+		input:
 
 </cfcomponent>
