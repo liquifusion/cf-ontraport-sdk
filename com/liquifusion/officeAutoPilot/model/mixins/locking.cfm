@@ -1,4 +1,4 @@
-<cffunction name="namedLockRead" output="false" returnType="any">
+<cffunction name="$namedLockRead" output="false" returnType="any" access="package">
 	<cfargument name="name" type="string" required="true" />
 	<cfargument name="objectName" type="string" required="true" />
 	<cfargument name="key" type="string" required="true" />
@@ -12,7 +12,7 @@
 	</cflock>
 </cffunction>
 
-<cffunction name="namedLockWrite" output="false" returnType="void">
+<cffunction name="$namedLockWrite" output="false" returnType="void" access="package">
 	<cfargument name="name" type="string" required="true" />
 	<cfargument name="objectName" type="string" required="true" />
 	<cfargument name="key" type="string" required="true" />

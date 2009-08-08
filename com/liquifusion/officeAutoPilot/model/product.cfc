@@ -1,7 +1,6 @@
 <cfcomponent extends="base">
 
-	
-	<cfset variables.instance.name = "contact" />
+	<cfset variables.instance.name = "product" />
 
 	<cffunction name="init">
 		<cfargument name="appId" required="true" type="string" />
@@ -9,10 +8,8 @@
 		<cfargument name="properties" required="false" default="" />
 		<cfscript>
 			// init base.cfc to store our settings
-			return super.init(url="http://api.moon-ray.com/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties);
+			return super.init(url="http://api.moon-ray.com/pdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties);
 		</cfscript>
 	</cffunction>
-
-
 
 </cfcomponent>
