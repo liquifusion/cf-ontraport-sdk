@@ -494,7 +494,7 @@
 				
 				loc.jEnd = ArrayLen(loc.fieldArray);
 				
-				for (loc.j = 1; loc.j lte loc.jEnd; loc.j++) {
+				for (loc.j = 1; loc.j lte loc.jEnd; loc.j=loc.j+1) {
 				
 					loc.field = loc.fieldArray[loc.j];
 					
