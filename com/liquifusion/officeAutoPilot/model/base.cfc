@@ -196,7 +196,7 @@
 			{
 				loc.changedProperties = changedProperties();
 				loc.iEnd = ListLen(loc.changedProperties);
-				for (loc.i=1; loc.i <= loc.iEnd; loc.i+1)
+				for (loc.i=1; loc.i lte loc.iEnd; loc.i+1)
 				{
 					loc.item = ListGetAt(loc.changedProperties, loc.i);
 					loc.returnValue[loc.item] = StructNew();
