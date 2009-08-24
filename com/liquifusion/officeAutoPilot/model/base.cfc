@@ -556,7 +556,7 @@
 			</cfif>
 		</cfhttp>
 		
-		<cfset loc.response = CreateObject("component", "response").init(Duplicate(arguments), Duplicate(loc.http)) />
+		<cfset loc.response = CreateObject("component", "officeautopilot.model.response").init(request=Duplicate(arguments), response=Duplicate(loc.http)) />
 		
 		<cfreturn loc.response />
 	</cffunction>
