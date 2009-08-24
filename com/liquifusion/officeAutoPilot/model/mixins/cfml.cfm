@@ -1,5 +1,5 @@
 <cffunction name="$image" returntype="struct" access="package" output="false">
-	<cfset var returnValue = {}>
+	<cfset var returnValue = StructNew()>
 	<cfset arguments.structName = "returnValue">
 	<cfimage attributeCollection="#arguments#">
 	<cfreturn returnValue>
@@ -31,13 +31,13 @@
 
 <cffunction name="$include" returntype="void" access="package" output="false">
 	<cfargument name="template" type="string" required="true">
-	<cfset var loc = {}>
+	<cfset var loc = StructNew()>
 	<cfinclude template="../../#LCase(arguments.template)#">
 </cffunction>
 
 <cffunction name="$includeAndReturnOutput" returntype="string" access="package" output="false">
 	<cfargument name="$template" type="string" required="true">
-	<cfset var loc = {}>
+	<cfset var loc = StructNew()>
 	<cfif StructKeyExists(arguments, "$type") AND arguments.$type IS "partial">
 		<!--- make it so the developer can reference passed in arguments in the loc scope if they prefer --->
 		<cfset loc = arguments>
@@ -66,7 +66,7 @@
 </cffunction>
 
 <cffunction name="$invoke" returntype="any" access="package" output="false">
-	<cfset var loc = {}>
+	<cfset var loc = StructNew()>
 	<cfset arguments.returnVariable = "loc.returnValue">
 	<cfif StructKeyExists(arguments, "componentReference")>
 		<cfset arguments.component = arguments.componentReference>

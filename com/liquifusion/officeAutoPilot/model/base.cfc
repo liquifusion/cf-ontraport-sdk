@@ -3,22 +3,31 @@
 	<cfset variables.instance = StructNew() />
 	<cfset variables.instance.scopeName = "officeautopilot" />
 	
-	<cffunction name="init" access="public">
+	
+	<!---
+	****************************************************************
+		INSTANCE METHODS
+	****************************************************************
+	--->
+	
+	<cffunction name="init" access="public" returntype="base">
 		<cfargument name="url" required="true" type="string" />
 		<cfargument name="appId" required="true" type="string" />
 		<cfargument name="key" required="true" type="string" />
-		<cfargument name="properties" required="false" default="" />
+		<cfargument name="properties" required="false" default="#StructNew()#" />
 		<cfargument name="timeout" required="false" type="numeric" default="30" />
+		<cfargument name="$persisted" required="false" default="false" />
 		<cfscript>
 			variables.instance.url = arguments.url;
 			variables.instance.timeout = arguments.timeout;
 			variables.instance.appId = arguments.appId;
 			variables.instance.key = arguments.key;
 			
-			$createProperties(getName(), this.properties());
-			
-			if (IsStruct(arguments.properties))
-				$populateProperties(arguments.properties);
+			$createProperties(this.properties());
+			$populateProperties(arguments.properties);
+				
+			if (arguments.$persisted)
+				$updatePersistedProperties();
 			
 			variables.instance.searchOperations = StructNew();
 			variables.instance.searchOperations["eq"]            = "e";
@@ -36,7 +45,6 @@
 	</cffunction>
 	
 	<cfinclude template="mixins/locking.cfm" />
-	<cfinclude template="mixins/cfml.cfm" />
 	<cfinclude template="mixins/to.cfm" />
 	
 	
@@ -132,6 +140,169 @@
 		</cfscript>
 	</cffunction>
 	
+	
+	<cffunction name="changedProperties" returntype="string" access="public" output="false">
+		<cfscript>
+			var loc = StructNew();
+			
+			loc.returnValue = "";
+			loc.properties = $getPropertyData();
+			loc.iEnd = ArrayLen(loc.properties);
+			
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
+			
+				loc.property = loc.properties[loc.i];
+				if (hasChanged(loc.property.name))
+					loc.returnValue = ListAppend(loc.returnValue, loc.property.name);
+			}
+			
+			return loc.returnValue;
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="hasChanged" returntype="boolean" access="public" output="false">
+		<cfargument name="property" type="string" required="false" default="" hint="Name of property to check for change">
+		<cfscript>
+			var loc =  StructNew();
+			
+			loc.returnValue = false;
+			loc.properties = $getPropertyData();
+			loc.iEnd = ArrayLen(loc.properties);
+			
+			
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
+			
+				loc.property = loc.properties[loc.i];
+				
+				if (not StructKeyExists(this, loc.property.name) 
+					or not StructKeyExists(variables.instance, "$persistedProperties") 
+					or not StructKeyExists(variables.instance.$persistedProperties, loc.property.name) 
+					or Compare(this[loc.property.name], variables.instance.$persistedProperties[loc.property.name]) 
+					and (not Len(arguments.property) or loc.property.name eq arguments.property)) {
+					
+					loc.returnValue = true;	
+				}
+			}
+			
+			return loc.returnValue;
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="allChanges" returntype="struct" access="public" output="false">
+		<cfscript>
+			var loc = StructNew();
+			loc.returnValue = StructNew();
+			if (hasChanged())
+			{
+				loc.changedProperties = changedProperties();
+				loc.iEnd = ListLen(loc.changedProperties);
+				for (loc.i=1; loc.i <= loc.iEnd; loc.i++)
+				{
+					loc.item = ListGetAt(loc.changedProperties, loc.i);
+					loc.returnValue[loc.item] = StructNew();
+					loc.returnValue[loc.item].changedFrom = changedFrom(loc.item);
+					if (StructKeyExists(this, loc.item))
+						loc.returnValue[loc.item].changedTo = this[loc.item];
+					else
+						loc.returnValue[loc.item].changedTo = "";
+				}
+			}
+		</cfscript>
+		<cfreturn loc.returnValue>
+	</cffunction>
+	
+	<cffunction name="changedFrom" returntype="string" access="public" output="false">
+		<cfargument name="property" type="string" required="true" hint="Name of property to get the previous value for">
+		<cfscript>
+			var loc = StructNew();
+			loc.returnValue = "";
+			if (StructKeyExists(variables.instance, "$persistedProperties") and StructKeyExists(variables.instance.$persistedProperties, arguments.property))
+				loc.returnValue = variables.instance.$persistedProperties[arguments.property];
+		</cfscript>
+		<cfreturn loc.returnValue>
+	</cffunction>	
+	
+	
+	<cffunction name="isNew" access="public" returntype="boolean" hint="i let you know whether this object has been persisted or not">
+		<cfscript>
+			var loc = StructNew();
+			loc.returnValue = true;
+			
+			if (StructKeyExists(variables.instance, "$persistedProperties"))
+				loc.returnValue = false;
+			
+			return loc.returnValue;
+		</cfscript>
+	</cffunction>
+
+
+	<cffunction name="create" returntype="any" access="public" output="false">
+		<cfargument name="properties" type="struct" required="false" default="#StructNew()#" />
+		<cfscript>
+			return save(argumentCollection=arguments);
+		</cfscript>
+	</cffunction>
+
+
+	<cffunction name="update" returntype="boolean" access="public" output="false">
+		<cfargument name="properties" type="struct" required="false" default="#StructNew()#" />
+		<cfscript>
+			return save(argumentCollection=arguments);
+		</cfscript>
+	</cffunction>
+
+
+	<cffunction name="save" returntype="boolean" access="public" output="false">
+		<cfargument name="properties" type="struct" required="false" default="#StructNew()#" />
+		<cfscript>
+			var loc = StructNew();
+			
+			for (loc.key in arguments)
+				if (loc.key neq "properties")
+					arguments.properties[loc.key] = arguments[loc.key];
+					
+			for (loc.key in arguments.properties)
+				this[loc.key] = arguments.properties[loc.key];
+			
+			loc.returnValue = false;
+			
+			if (isNew()) {
+				
+				loc.reqType = "add";
+			
+			} else {
+			
+				loc.reqType = "update";
+				
+				if (not hasChanged())
+					return true;
+			}
+			
+			// send it off!
+			loc.response = $process(reqType=loc.reqType, data=$toXml(), return_id=true);
+			
+			loc.xml = loc.response.getXmlContent();
+			loc.dataArray = XmlSearch(loc.xml, "//result/" & getName());
+			
+			if (ArrayIsEmpty(loc.dataArray))
+				return false;
+				
+			loc.data = XmlParse(loc.dataArray[1]);
+			$populateProperties($toStruct(xml=loc.data));
+			$updatePersistedProperties();
+			
+			return true;			
+		</cfscript>
+	</cffunction>
+
+	
+	<!---
+	****************************************************************
+		CLASS METHODS
+	****************************************************************
+	--->
+	
+	
 	<cffunction name="findAllById" access="public" returntype="any">
 		<cfargument name="ids" required="true" type="any" />
 		<cfargument name="returnAs" required="false" default="structs" /><!--- can also be objects and query --->
@@ -187,6 +358,9 @@
 		
 		<cfscript>
 			loc.response = this.$process(reqType="fetch", data=ToString(loc.requestXml));
+			
+			if (loc.response.hasError())
+				return false;
 			
 			loc.xml = loc.response.getXmlContent();
 			
@@ -271,6 +445,17 @@
 			
 				return $toArray(loc.response, arguments.returnAs);
 			}
+		</cfscript>
+	</cffunction>
+	
+	
+	<cffunction name="$createModelObject" access="package" returntype="base" output="false">
+		<cfargument name="properties" required="true" type="struct" />
+		<cfargument name="persisted" required="false" default="false" />
+		<cfscript>
+			var loc = StructNew();
+			loc.returnObject = CreateObject("component", getName()).init(appId=getAppId(), key=getKey(), properties=arguments.properties, $persisted=arguments.persisted);
+			return loc.returnObject;
 		</cfscript>
 	</cffunction>
 	
@@ -373,10 +558,6 @@
 		
 		<cfset loc.response = CreateObject("component", "response").init(request=Duplicate(arguments), response=Duplicate(loc.http)) />
 		
-		<cfif loc.response.hasError()>
-			<cfthrow type="officeAutoPilot.messageError" message="#loc.response.getError()#" />
-		</cfif>
-		
 		<cfreturn loc.response />
 	</cffunction>
 	
@@ -433,10 +614,11 @@
 	</cffunction>
 	 
 	
-	<cffunction name="$getPropertyData" access="package" returntype="array">
-		<cfargument name="objectName" required="true" type="string" />
+	<cffunction name="$getPropertyData" access="package" returntype="array" output="false">
 		<cfscript>
-			return $namedLockRead(name=$getScopeName(), objectName="application.officeautopilot.#arguments.objectName#", key="properties");
+			var loc = StructNew();
+			loc.objectName = getName();
+			return $namedLockRead(name=$getScopeName(), objectName="application.officeautopilot.#loc.objectName#", key="properties");
 		</cfscript>
 	</cffunction>
 	
@@ -467,16 +649,15 @@
 	
 	
 	<cffunction name="$createProperties" access="package" returntype="void">
-		<cfargument name="objectName" required="true" type="string" />
-		<cfargument name="value" required="true" type="array" />
+		<cfargument name="properties" required="true" type="array" />
 		<cfscript>
 			var loc = StructNew();
 			
-			loc.iEnd = ArrayLen(arguments.value);
+			loc.iEnd = ArrayLen(arguments.properties);
 			
 			for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
 			
-				loc.field = arguments.value[loc.i];
+				loc.field = arguments.properties[loc.i];
 				
 				this[loc.field.name] = "";
 			}
@@ -497,10 +678,26 @@
 	</cffunction>
 	
 	
+	<cffunction name="$updatePersistedProperties">
+		<cfscript>
+			var loc = StructNew();
+			variables.instance.$persistedProperties = StructNew();
+			loc.properties = $getPropertyData();
+			loc.iEnd = ArrayLen(loc.properties);
+			
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
+			
+				loc.property = loc.properties[loc.i];
+				if (StructKeyExists(this, loc.property.name))
+					variables.instance.$persistedProperties[loc.property.name] = this[loc.property.name];
+			}
+		</cfscript>
+	</cffunction>
+	
 	<!---
 		SEARCH HELPER FUNCTIONS
 	--->
-	<cffunction name="mapOperation">
+	<cffunction name="mapOperation" access="package" returntype="string" output="false">
 		<cfargument name="operation" required="true" type="string" />
 		<cfscript>
 			if (not StructKeyExists(variables.instance.searchOperations, arguments.operation)) 
@@ -510,5 +707,16 @@
 		</cfscript>
 	</cffunction>
 	
+	
+	<cffunction name="getMemento" access="public" returntype="struct" output="false">
+		<cfreturn variables.instance />
+	</cffunction>
+	
+	
+	<cffunction name="$throw" returntype="void" access="package" output="false">
+		<cfargument name="type" required="true" type="string" />
+		<cfargument name="message" required="true" type="string" />
+		<cfthrow type="#arguments.type#" message="#arguments.message#" />
+	</cffunction>	
 	
 </cfcomponent>

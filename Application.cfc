@@ -1,3 +1,3 @@
 <cfcomponent>
-	<cfset this.name = "officeautopilotsdk10" />
+	<cfset this.name = "officeautopilotsdk" />
 </cfcomponent>

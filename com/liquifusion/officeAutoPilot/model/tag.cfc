@@ -3,13 +3,14 @@
 	
 	<cfset variables.instance.name = "tag" />
 
+
 	<cffunction name="init">
 		<cfargument name="appId" required="true" type="string" />
 		<cfargument name="key" required="true" type="string" />
-		<cfargument name="properties" required="false" default="" />
+		<cfargument name="properties" required="false" default="#StructNew()#" />
 		<cfscript>
 			// init base.cfc to store our settings
-			return super.init(url="http://api.moon-ray.com/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties);
+			return super.init(url="https://moon-ray.com/api/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties, $persisted=false);
 		</cfscript>
 	</cffunction>
 	
@@ -33,8 +34,15 @@
 			
 			ArrayAppend(loc.data, Duplicate(loc.struct));
 			
-			loc.struct.name = "name";
-			loc.struct.label = "Name";
+			loc.struct.name = "stringid";
+			loc.struct.label = "String Id";
+			loc.struct.type = "string";
+			loc.struct.group = "";
+			
+			ArrayAppend(loc.data, Duplicate(loc.struct));
+			
+			loc.struct.name = "groupname";
+			loc.struct.label = "Group Name";
 			loc.struct.type = "string";
 			loc.struct.group = "";
 			
@@ -47,8 +55,28 @@
 	</cffunction>
 	
 	
+	<cffunction name="create">
+		<cfthrow type="officeautopilot.MethodNotImplemented" message="create() cannot be implemented for this object." />
+	</cffunction>
+	
+	
+	<cffunction name="update">
+		<cfthrow type="officeautopilot.MethodNotImplemented" message="update() cannot be implemented for this object." />
+	</cffunction>
+	
+	
+	<cffunction name="save">
+		<cfthrow type="officeautopilot.MethodNotImplemented" message="save() cannot be implemented for this object." />
+	</cffunction>
+	
+	
 	<cffunction name="search">
 		<cfthrow type="officeautopilot.MethodNotImplemented" message="search() cannot be implemented for this object." />
+	</cffunction>
+	
+	
+	<cffunction name="findAllById">
+		<cfthrow type="officeautopilot.MethodNotImplemented" message="findAllById() cannot be implemented for this object." />
 	</cffunction>
 	
 	
@@ -70,13 +98,14 @@
 			
 			if (arguments.returnAs eq "query") {
 			
-				loc.results = QueryNew("id,name");
+				loc.results = QueryNew("id,stringid,groupname");
 				loc.dump = QueryAddRow(loc.results, loc.iEnd);
 				
 				for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
 				
-					QuerySetCell(loc.results, "id", $normalizeFieldName(ListGetAt(loc.dataList, loc.i, "*/*")), loc.i);
-					QuerySetCell(loc.results, "name", ListGetAt(loc.dataList, loc.i, "*/*"), loc.i);
+					QuerySetCell(loc.results, "id", loc.i, loc.i);
+					QuerySetCell(loc.results, "stringid", $normalizeFieldName(ListGetAt(loc.dataList, loc.i, "*/*")), loc.i);
+					QuerySetCell(loc.results, "groupname", ListGetAt(loc.dataList, loc.i, "*/*"), loc.i);
 				}
 			
 			} else {
@@ -86,7 +115,8 @@
 				for (loc.i = 1; loc.i lte loc.iEnd; loc.i++) {
 					
 					loc.struct = StructNew();
-					loc.struct.id = $normalizeFieldName(ListGetAt(loc.dataList, loc.i, "*/*"));
+					loc.struct.id = loc.i;
+					loc.struct.stringid = $normalizeFieldName(ListGetAt(loc.dataList, loc.i, "*/*"));
 					loc.struct.name = ListGetAt(loc.dataList, loc.i, "*/*");
 					
 					if (arguments.returnAs eq "objects") { 
