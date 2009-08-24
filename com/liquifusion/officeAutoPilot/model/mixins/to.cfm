@@ -94,7 +94,7 @@
 			loc.fields = XmlSearch(loc.data, "//" & getName() & "/Group_Tag/field");
 			loc.jEnd = ArrayLen(loc.fields);
 							
-			for (loc.j = 1; loc.j lte loc.jEnd; loc.j++) {
+			for (loc.j = 1; loc.j lte loc.jEnd; loc.j=loc.j+1) {
 			
 				loc.field = loc.fields[loc.j];
 				loc.fieldName = $normalizeFieldName(loc.field.XmlAttributes.name);
@@ -200,7 +200,7 @@
 		
 		loc.jEnd = ArrayLen(loc.fields);
 						
-		for (loc.j = 1; loc.j lte loc.jEnd; loc.j++) {
+		for (loc.j = 1; loc.j lte loc.jEnd; loc.j=loc.j+1) {
 		
 			loc.field = loc.fields[loc.j];
 			loc.fieldName = $normalizeFieldName(loc.field.XmlAttributes.name);
