@@ -59,7 +59,7 @@
 	</cffunction>
 	
 	<cffunction name="getXmlContent" access="public" returntype="xml">
-		<cfreturn XmlParse(variables.instance.response.fileContent) />
+		<cfreturn XmlParse(Trim(variables.instance.response.fileContent)) />
 	</cffunction>
 	
 	<cffunction name="getStringContent" access="public" returntype="xml">
