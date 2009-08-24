@@ -149,7 +149,7 @@
 			loc.properties = $getPropertyData();
 			loc.iEnd = ArrayLen(loc.properties);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.property = loc.properties[loc.i];
 				if (hasChanged(loc.property.name))
@@ -170,7 +170,7 @@
 			loc.iEnd = ArrayLen(loc.properties);
 			
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.property = loc.properties[loc.i];
 				
@@ -196,7 +196,7 @@
 			{
 				loc.changedProperties = changedProperties();
 				loc.iEnd = ListLen(loc.changedProperties);
-				for (loc.i=1; loc.i lte loc.iEnd; loc.i+1)
+				for (loc.i=1; loc.i lte loc.iEnd; loc.i=loc.i+1)
 				{
 					loc.item = ListGetAt(loc.changedProperties, loc.i);
 					loc.returnValue[loc.item] = StructNew();
@@ -415,7 +415,7 @@
 			loc.iEnd = ArrayLen(arguments.searchArray);
 			
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.itemXml = loc.item;
 				
@@ -486,7 +486,7 @@
 			
 			loc.iEnd = ArrayLen(loc.groupArray);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.group = loc.groupArray[loc.i];
 				
@@ -603,7 +603,7 @@
 			
 			loc.iEnd = ArrayLen(loc.properties);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				if (loc.properties[loc.i].name eq arguments.fieldName)
 					return loc.properties[loc.i];
@@ -638,7 +638,7 @@
 			
 			loc.iEnd = ArrayLen(arguments.value);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.field = arguments.value[loc.i];
 				
@@ -655,7 +655,7 @@
 			
 			loc.iEnd = ArrayLen(arguments.properties);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.field = arguments.properties[loc.i];
 				
@@ -685,7 +685,7 @@
 			loc.properties = $getPropertyData();
 			loc.iEnd = ArrayLen(loc.properties);
 			
-			for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+			for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 			
 				loc.property = loc.properties[loc.i];
 				if (StructKeyExists(this, loc.property.name))

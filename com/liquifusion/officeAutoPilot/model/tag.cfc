@@ -101,7 +101,7 @@
 				loc.results = QueryNew("id,stringid,groupname");
 				loc.dump = QueryAddRow(loc.results, loc.iEnd);
 				
-				for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+				for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 				
 					QuerySetCell(loc.results, "id", loc.i, loc.i);
 					QuerySetCell(loc.results, "stringid", $normalizeFieldName(ListGetAt(loc.dataList, loc.i, "*/*")), loc.i);
@@ -112,7 +112,7 @@
 			
 				loc.results = ArrayNew(1);
 				
-				for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+				for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 					
 					loc.struct = StructNew();
 					loc.struct.id = loc.i;

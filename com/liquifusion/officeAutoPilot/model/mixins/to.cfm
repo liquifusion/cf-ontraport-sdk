@@ -20,7 +20,7 @@
 		loc.properties = $getPropertyData();
 		loc.iEnd = ArrayLen(loc.properties);
 		
-		for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+		for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 		
 			loc.property = loc.properties[loc.i];
 			
@@ -87,7 +87,7 @@
 		else
 			loc.returnQuery = QueryNew("empty");
 		
-		for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+		for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 		
 			loc.data = XmlParse(loc.dataArray[loc.i]);
 			loc.dump = QuerySetCell(loc.returnQuery, "id", loc.data.contact.XmlAttributes.id, loc.i);
@@ -121,7 +121,7 @@
 		
 		loc.returnList = "";
 		
-		for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+		for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 		
 			loc.field = loc.dataArray[loc.i];
 			loc.fieldName = $normalizeFieldName(loc.field.XmlAttributes.name);
@@ -156,7 +156,7 @@
 		loc.dataArray = XmlSearch(loc.xml, "//result/" & getName());
 		loc.iEnd = ArrayLen(loc.dataArray);
 		
-		for (loc.i = 1; loc.i lte loc.iEnd; loc.i+1) {
+		for (loc.i = 1; loc.i lte loc.iEnd; loc.i=loc.i+1) {
 		
 			loc.data = XmlParse(loc.dataArray[loc.i]);
 	
