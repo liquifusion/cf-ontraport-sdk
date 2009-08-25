@@ -538,7 +538,7 @@
 		<cfset arguemnts.appId = getAppId() />
 		<cfset arguemnts.key = getKey() />
 		
-		<cfhttp url="#arguments.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="false">
+		<cfhttp url="#arguments.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="false" charset="utf-8">
 			<cfhttpparam name="Appid" value="#arguemnts.appId#" type="formfield" />
 			<cfhttpparam name="Key" value="#arguemnts.key#" type="formfield" />
 			<cfhttpparam name="reqType" value="#arguments.reqType#" type="formfield" />
@@ -556,16 +556,17 @@
 			</cfif>
 		</cfhttp>
 
+		<cfdump var="#Asc(Left(loc.http.fileContent,1))#" />
+			<cfabort />
+		<cfif Asc(Left(loc.http.fileContent,1)) EQ 65279>
+		
+			<cfdump var="#loc.http#" />
+			<cfabort />
+			<cfset returnedXML = Right(cfhttp.fileContent,Len(cfhttp.fileContent)-1)>
+		</cfif>		
 		
 		
 		<cfset loc.response = CreateObject("component", "officeautopilot.model.response").init(request=Duplicate(arguments), response=loc.http) />
-		
-		<cfif Asc(Left(loc.http.fileContent,1)) EQ 65279>
-		
-		<cfdump var="#loc.http#" />
-		<cfabort />
-			<cfset returnedXML = Right(cfhttp.fileContent,Len(cfhttp.fileContent)-1)>
-		</cfif>		
 		
 		<cfreturn loc.response />
 	</cffunction>
