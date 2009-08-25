@@ -60,8 +60,7 @@
 	
 	<cffunction name="getXmlContent" access="public" returntype="xml">
 		<!--- RERplace removes any characters before the XML starts http://www.bennadel.com/blog/1206-Content-Is-Not-Allowed-In-Prolog-ColdFusion-XML-And-The-Byte-Order-Mark-BOM-.htm --->
-		<cfsetting enablecfoutputonly="yes" />
-		<cfreturn XmlParse(REReplace(variables.instance.response.fileContent, "^[^<]*", "", "all")) />
+		<cfreturn XmlParse(variables.instance.response.fileContent) />
 	</cffunction>
 	
 	<cffunction name="getStringContent" access="public" returntype="xml">
