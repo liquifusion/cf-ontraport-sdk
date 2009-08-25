@@ -534,28 +534,30 @@
 		
 		<cfset var loc = StructNew() />
 		
-		<cfset arguments.url = getUrl() />
-		<cfset arguemnts.appId = getAppId() />
-		<cfset arguemnts.key = getKey() />
+		<cfset loc.request = Duplicate(arguments) />
 		
-		<cfhttp url="#arguments.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="false" charset="utf-8">
-			<cfhttpparam name="Appid" value="#arguemnts.appId#" type="formfield" />
-			<cfhttpparam name="Key" value="#arguemnts.key#" type="formfield" />
-			<cfhttpparam name="reqType" value="#arguments.reqType#" type="formfield" />
+		<cfset loc.request.url = getUrl() />
+		<cfset loc.request.appId = getAppId() />
+		<cfset loc.request.key = getKey() />
+		
+		<cfhttp url="#loc.request.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="false" charset="utf-8">
+			<cfhttpparam name="Appid" value="#loc.request.appId#" type="formfield" />
+			<cfhttpparam name="Key" value="#loc.request.key#" type="formfield" />
+			<cfhttpparam name="reqType" value="#loc.request.reqType#" type="formfield" />
 			
-			<cfif Len(arguments.data)>
-				<cfhttpparam name="data" value="#arguments.data#" type="formfield" />
+			<cfif Len(loc.request.data)>
+				<cfhttpparam name="data" value="#loc.request.data#" type="formfield" />
 			</cfif>
 			
-			<cfif arguments.f_add eq true>
+			<cfif loc.request.f_add eq true>
 				<cfhttpparam name="f_add" value="1" type="formfield" />
 			</cfif>
 			
-			<cfif arguments.return_id eq true>
+			<cfif loc.request.return_id eq true>
 				<cfhttpparam name="return_id" value="1" type="formfield" />
 			</cfif>
 		</cfhttp>
-		<cfdump var="#arguments#" />
+		<cfdump var="#loc.request#" />
 		<cfdump var="#loc.http#" />
 		<cfabort />
 		
