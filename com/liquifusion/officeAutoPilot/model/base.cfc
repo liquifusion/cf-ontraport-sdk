@@ -556,6 +556,9 @@
 			</cfif>
 		</cfhttp>
 		
+		<cfdump var="#loc.http#" />
+		<cfabort />
+		
 		<cfloop index="intCharIndex" from="1" to="6" step="1">
 		 
 			<!--- Get the character in question. --->
