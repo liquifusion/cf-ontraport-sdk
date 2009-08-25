@@ -540,7 +540,7 @@
 		<cfset loc.request.appId = getAppId() />
 		<cfset loc.request.key = getKey() />
 		
-		<cfhttp url="#loc.request.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="true" charset="utf-8">
+		<cfhttp url="#loc.request.url#" timeout="#getTimeout()#" method="post" result="loc.http" throwonerror="false" charset="utf-8">
 			<cfhttpparam name="Appid" value="#loc.request.appId#" type="formfield" />
 			<cfhttpparam name="Key" value="#loc.request.key#" type="formfield" />
 			<cfhttpparam name="reqType" value="#loc.request.reqType#" type="formfield" />
