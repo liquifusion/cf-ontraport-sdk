@@ -556,8 +556,6 @@
 			<cfif loc.request.return_id eq true>
 				<cfhttpparam name="return_id" value="1" type="formfield" />
 			</cfif>
-			
-			<cfhttpparam type="xml" value="" />
 		</cfhttp>
 		<cfdump var="#loc.request#" />
 		<cfdump var="#loc.http#" />
