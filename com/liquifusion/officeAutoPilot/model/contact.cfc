@@ -11,7 +11,7 @@
 		<cfargument name="$persisted" required="false" default="false" />
 		<cfscript>
 			// init base.cfc to store our settings
-			return super.init(url="https://moon-ray.com/api/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties, $persisted=arguments.$persisted);
+			return super.init(url="http://moon-ray.com/api/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties, $persisted=arguments.$persisted);
 		</cfscript>
 	</cffunction>
 

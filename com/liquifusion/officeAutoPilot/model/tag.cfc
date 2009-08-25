@@ -10,7 +10,7 @@
 		<cfargument name="properties" required="false" default="#StructNew()#" />
 		<cfscript>
 			// init base.cfc to store our settings
-			return super.init(url="https://moon-ray.com/api/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties, $persisted=false);
+			return super.init(url="http://moon-ray.com/api/cdata.php", appId=arguments.appId, key=arguments.key, properties=arguments.properties, $persisted=false);
 		</cfscript>
 	</cffunction>
 	

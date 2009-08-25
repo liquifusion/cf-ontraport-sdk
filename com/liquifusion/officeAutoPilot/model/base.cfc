@@ -557,28 +557,6 @@
 				<cfhttpparam name="return_id" value="1" type="formfield" />
 			</cfif>
 		</cfhttp>
-		<cfdump var="#loc.request#" />
-		<cfdump var="#loc.http#" />
-		<cfabort />
-		
-		<cfloop index="intCharIndex" from="1" to="6" step="1">
-		 
-			<!--- Get the character in question. --->
-			<cfset strChar = Mid( Trim( loc.http.FileContent ), intCharIndex, 1 ) />
-		 
-			<!--- Output char and Ascii values. --->
-			<cfdump var="[#strChar#] - #Asc( strChar )#<br />" />
-		 
-		</cfloop>		
-
-		<cfabort />
-		<cfif Asc(Left(loc.http.fileContent,1)) EQ 65279>
-		
-			<cfdump var="#loc.http#" />
-			<cfabort />
-			<cfset returnedXML = Right(cfhttp.fileContent,Len(cfhttp.fileContent)-1)>
-		</cfif>		
-		
 		
 		<cfset loc.response = CreateObject("component", "officeautopilot.model.response").init(request=Duplicate(arguments), response=loc.http) />
 		
