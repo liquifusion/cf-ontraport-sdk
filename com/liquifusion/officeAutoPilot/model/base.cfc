@@ -555,9 +555,18 @@
 				<cfhttpparam name="return_id" value="1" type="formfield" />
 			</cfif>
 		</cfhttp>
+		
+		<cfloop index="intCharIndex" from="1" to="6" step="1">
+		 
+			<!--- Get the character in question. --->
+			<cfset strChar = Mid( Trim( loc.http.FileContent ), intCharIndex, 1 ) />
+		 
+			<!--- Output char and Ascii values. --->
+			<cfdump var="[#strChar#] - #Asc( strChar )#<br />" />
+		 
+		</cfloop>		
 
-		<cfdump var="#Asc(Left(loc.http.fileContent,1))#" />
-			<cfabort />
+		<cfabort />
 		<cfif Asc(Left(loc.http.fileContent,1)) EQ 65279>
 		
 			<cfdump var="#loc.http#" />
