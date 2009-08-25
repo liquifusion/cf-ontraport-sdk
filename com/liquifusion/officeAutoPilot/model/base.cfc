@@ -560,6 +560,13 @@
 		
 		<cfset loc.response = CreateObject("component", "officeautopilot.model.response").init(request=Duplicate(arguments), response=loc.http) />
 		
+		<cfif Asc(Left(loc.http.fileContent,1)) EQ 65279>
+		
+		<cfdump var="#loc.http#" />
+		<cfabort />
+			<cfset returnedXML = Right(cfhttp.fileContent,Len(cfhttp.fileContent)-1)>
+		</cfif>		
+		
 		<cfreturn loc.response />
 	</cffunction>
 	
