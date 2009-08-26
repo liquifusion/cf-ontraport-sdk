@@ -377,6 +377,7 @@
 	
 	<cffunction name="search" access="public" returntype="any" hint="">
 		<cfargument name="searchArray" required="false" type="array" default="#ArrayNew(1)#" />
+		<cfargument name="pageNumber" required="false" type="numeric" default="1" />
 		<cfargument name="returnAs" required="false" default="structs" /><!--- can also be objects and query --->
 		
 		<cfset var loc = StructNew() />
@@ -392,7 +393,7 @@
 		<!--- loop through the arguments to see if there are any others so that we can specify equals to easily --->
 		<cfscript>
 
-			loc.preDefinedArguments = "searchArray,returnAs";
+			loc.preDefinedArguments = "searchArray,pageNumber,returnAs";
 			
 			for (loc.key in arguments) {
 			
@@ -428,7 +429,7 @@
 		
 		<cfsavecontent variable="loc.requestXml">
 			<cfoutput>
-				<search>
+				<search page="#arguments.pageNumber#">
 					#loc.searchXml#
 				</search>
 			</cfoutput>
